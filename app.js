@@ -36,7 +36,7 @@ let body = document.querySelector("body");
 h2End.innerText = "";
 body.appendChild(h2End);
 h2End.style.zIndex = "100";
-h2End.style.fontWeight = "600";
+h2End.style.fontWeight = "500";
 h2End.style.position = "absolute";
 h2End.style.top = "50%";
 h2End.style.left = "30.5%";
@@ -45,14 +45,16 @@ h2End.style.color = "#fff";
 
 body.appendChild(h2Begin);
 h2Begin.style.zIndex = "100";
-h2Begin.style.fontWeight = "400";
+h2Begin.style.fontWeight = "300";
 h2Begin.style.position = "absolute";
 h2Begin.style.top = "42%";
 h2Begin.style.left = "31.5%";
 h2Begin.style.color = "#fff";
+h2Begin.style.textAlign = "center";
 
 
-para.innerHTML = "<p><b>Instructions:</b></br>1. Hold The Bar And Move The Mouse To Move </br>2.  Refresh To Play Again   </br>3. Do Not Play This On A Phone  </p>";
+
+para.innerHTML = "<p><b>Instructions:</b></br>1. Click And Leave The Spaceship And Move The Mouse To Move </br>2. Refresh To Play Again   </br>3. Do Not Play This On A Phone  </p>";
 body.appendChild(para);
 para.style.zIndex = "100";
 para.style.textAlign = "start";
@@ -68,7 +70,6 @@ para.style.color = "#fff";
 
 let barPosition = bar.getBoundingClientRect().left;
 let gameStarted = false;
-
 document.addEventListener("keyup", (event) => {
 
     if (event.key === "Enter" && !gameStarted) {
@@ -102,8 +103,8 @@ function mouseDownHandler(e) {
 }
 
 function mouseUpHandler(e) {
-    window.removeEventListener("mousemove", mouseMoveHandler);
-    window.removeEventListener("mouseup", mouseUpHandler);
+    // window.removeEventListener("mousemove", mouseMoveHandler);
+    // window.removeEventListener("mouseup", mouseUpHandler);
 }
 
 var barLeft;
@@ -113,7 +114,7 @@ barLeft = bar.getBoundingClientRect().left + 33.5;
 function mouseMoveHandler(e) {
     if (e.clientX - offsetX > "1290" || e.clientX - offsetX < "6" || !gameStarted) return;
     bar.style.left = `${e.clientX - offsetX}px`;
-    barLeft = bar.getBoundingClientRect().left + 24.5;
+    barLeft = bar.getBoundingClientRect().left + 33.5;
 }
 
 
@@ -122,7 +123,7 @@ let bulletPos;
 
 const gamePlay = () => {
     if (gameStarted) {
-        const intervalId = setInterval(() => {
+        const intervalId2 = setInterval(() => {
             bulletPos = barLeft;
             createBullet();
         }, 200);
@@ -141,7 +142,7 @@ const createBullet = () => {
 const throwBullet = (newBullet) => {
     let bulletY = 60.8;
 
-    const intervalId = setInterval(() => {
+    const intervalId1 = setInterval(() => {
         newBullet.style.bottom = `${bulletY}px`;
         bulletY += 20;
 
@@ -173,9 +174,10 @@ const checkCollision = (newBullet,remainingBoxes) => {
             box.remove();
             newBullet.remove();
             if(68 - remainingBoxes.length == 68) {
-                h2End.innerHTML = `Congrats! You've Now Conquered The Space.</br>Refresh To Play Again`;
-                clearInterval(intervalId);
-                gameStarted=false;
+                h2End.innerHTML = `Congrats! You've Now Conquered The Space.</br>"Refresh" The Page To Play Again`;
+                // clearInterval(intervalId1);
+                clearInterval(intervalId2);
+                // gameStarted=false;
         }
 
         }
