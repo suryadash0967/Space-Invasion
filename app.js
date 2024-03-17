@@ -133,16 +133,16 @@ function mouseMoveHandler(e) {
 
 const gamePlay = () => {
     if (gameStarted) {
-    setInterval(() => {
-        createBullet();
-    }, 200);
+        setInterval(() => {
+            createBullet();
+        }, 300);
 
     }
 }
 
 const createBullet = () => {
     let newBullet = document.createElement("div");
-    newBullet.style.left = `${bar.getBoundingClientRect().left+24.5}px`;
+    newBullet.style.left = `${bar.getBoundingClientRect().left + 24.5}px`;
     newBullet.classList.add("bullets");
     console.log(bar.style.left);
     movingCompos.appendChild(newBullet);
@@ -154,15 +154,31 @@ const throwBullet = (newBullet) => {
 
     setInterval(() => {
         newBullet.style.bottom = `${bulletY}px`;
-        bulletY += 2;
+        bulletY += 4;
 
-        checkCollision();
-    }, 4);
+        checkCollision(newBullet);
+    }, 10);
 }
 
 
 
 
-const checkCollision = () =>{
-    
+const checkCollision = (newBullet) => {
+    boxes.forEach((box) => {
+
+        let boxRect = box.getBoundingClientRect();
+        let bullet = newBullet.getBoundingClientRect();
+        if (
+            boxRect.right >= bullet.right &&
+            boxRect.top <= bullet.top &&
+            boxRect.left <= bullet.left &&
+            boxRect.bottom <= bullet.bottom &&
+            boxRect.bottom >= bullet.top
+
+        ) {
+            box.remove();
+            newBullet.remove()
+        }
+    })
+
 }
