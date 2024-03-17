@@ -3,20 +3,20 @@ let bullet = document.querySelector(".bullets");
 let boxes = document.querySelectorAll(".box");
 let movingCompos = document.querySelector(".moving-compos");
 
-
+// console.log(boxes)
 
 let count = 0, blockX = 0, blockY = 10;
 
 
 boxes.forEach((box) => {
-    if (count % 16 == 0) {
-        blockX = 0;
-        blockY += 34;
+    if (count % 17 == 0) {
+        blockX = 57;
+        blockY += 45;
     }
     box.style.position = "absolute";
     box.style.left = `${blockX}px`;
     box.style.top = `${blockY}px`;
-    blockX += 85;
+    blockX += 75;
     count++;
 })
 
@@ -36,10 +36,10 @@ let body = document.querySelector("body");
 h2End.innerText = "";
 body.appendChild(h2End);
 h2End.style.zIndex = "100";
-h2End.style.fontWeight = "400";
+h2End.style.fontWeight = "600";
 h2End.style.position = "absolute";
 h2End.style.top = "50%";
-h2End.style.left = "41.5%";
+h2End.style.left = "30.5%";
 h2End.style.color = "#fff";
 
 
@@ -90,20 +90,6 @@ document.addEventListener("click", (event) => {
 
 })
 
-document.addEventListener("keyup", (event) => {
-    if (gameStarted) {
-        if (event.key === "ArrowRight") {
-            barPosition += 45;
-            bar.style.left = `${barPosition}px`;
-        }
-        if (event.key === "ArrowLeft") {
-
-            barPosition -= 45;
-            bar.style.left = `${barPosition}px`;
-        }
-    }
-})
-
 bar.addEventListener("mousedown", mouseDownHandler);
 
 function mouseDownHandler(e) {
@@ -121,30 +107,33 @@ function mouseUpHandler(e) {
 }
 
 var barLeft;
+barLeft = bar.getBoundingClientRect().left + 33.5;
+
 
 function mouseMoveHandler(e) {
-    if (e.clientX - offsetX > "1300" || e.clientX - offsetX < "6" || !gameStarted) return;
+    if (e.clientX - offsetX > "1290" || e.clientX - offsetX < "6" || !gameStarted) return;
     bar.style.left = `${e.clientX - offsetX}px`;
-    barLeft = bar.style.left;
+    barLeft = bar.getBoundingClientRect().left + 24.5;
 }
 
 
 
+let bulletPos;
 
 const gamePlay = () => {
     if (gameStarted) {
-        setInterval(() => {
+        const intervalId = setInterval(() => {
+            bulletPos = barLeft;
             createBullet();
-        }, 300);
+        }, 200);
 
     }
 }
 
 const createBullet = () => {
     let newBullet = document.createElement("div");
-    newBullet.style.left = `${bar.getBoundingClientRect().left + 24.5}px`;
+    newBullet.style.left = `${bulletPos}px`;
     newBullet.classList.add("bullets");
-    console.log(bar.style.left);
     movingCompos.appendChild(newBullet);
     throwBullet(newBullet);
 }
@@ -152,22 +141,27 @@ const createBullet = () => {
 const throwBullet = (newBullet) => {
     let bulletY = 60.8;
 
-    setInterval(() => {
+    const intervalId = setInterval(() => {
         newBullet.style.bottom = `${bulletY}px`;
-        bulletY += 4;
+        bulletY += 20;
 
-        checkCollision(newBullet);
-    }, 10);
+        let remainingBoxes = document.querySelectorAll(".box");
+
+        checkCollision(newBullet,remainingBoxes);
+
+    }, 15);
 }
 
 
 
 
-const checkCollision = (newBullet) => {
-    boxes.forEach((box) => {
+const checkCollision = (newBullet,remainingBoxes) => {
 
+    boxes.forEach((box) => {
         let boxRect = box.getBoundingClientRect();
         let bullet = newBullet.getBoundingClientRect();
+
+
         if (
             boxRect.right >= bullet.right &&
             boxRect.top <= bullet.top &&
@@ -177,8 +171,18 @@ const checkCollision = (newBullet) => {
 
         ) {
             box.remove();
-            newBullet.remove()
+            newBullet.remove();
+            if(68 - remainingBoxes.length == 68) {
+                h2End.innerHTML = `Congrats! You've Now Conquered The Space.</br>Refresh To Play Again`;
+                clearInterval(intervalId);
+                gameStarted=false;
+        }
+
+        }
+
+        if (bullet.top <= 20) {
+            newBullet.remove();
         }
     })
-
 }
+
